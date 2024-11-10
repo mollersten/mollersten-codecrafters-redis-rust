@@ -4,11 +4,10 @@ use std::{
 };
 
 pub fn pong(mut stream: TcpStream) {
-
-    let mut content: String = String::with_capacity(512);
-    let mut handle = stream.try_clone().unwrap().take(512);
+    stream.write_all(b"+PONG\r\n").expect("Could not write");
     loop {
-        let result = handle.read_to_string(&mut content);
+        let mut content = String::with_capacity(512);
+        let result = stream.read_to_string(&mut content);
 
         match result {
             Ok(n) => {
