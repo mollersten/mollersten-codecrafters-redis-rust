@@ -15,10 +15,15 @@ pub fn pong(mut stream: TcpStream) {
         }
 
         stream.write_all(b"+PONG\r\n").expect("Error writing...");
+        
+
+        let join_handle = thread::spawn(move||{
+            stream2.write_all(b"+PONG\r\n").expect("Error writing...");
+        });
         if buf_count > 18 {
-            thread::spawn(move||{
-                stream2.write_all(b"+PONG\r\n").expect("Error writing...");
-            });
+            let _ = join_handle.join();
         }
+
+
     }
 }
