@@ -14,8 +14,9 @@ pub fn pong(mut stream: TcpStream) {
         }
 
         thread::spawn(move||{
-            stream2.write_all(b"PONG\r\n").unwrap();
+            stream2.write_all(b"PONG\r\n").expect("Error writing...");
         });
-        stream.write_all(b"+PONG\r\n").expect("Couldn't write");
+
+        stream.write_all(b"+PONG\r\n").expect("Error writing...");
     }
 }
