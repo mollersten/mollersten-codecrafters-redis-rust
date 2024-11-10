@@ -12,7 +12,7 @@ pub fn pong(mut stream: TcpStream) {
         match result {
             Ok(n) => {
                 println!("Got {n} bytes");
-                if content.as_str() == "PING" {
+                if content.as_str() == "*1\r\n$4\r\nPING\r\n" {
                     stream.write_all(b"+PONG\r\n").expect("Couldn't write");
                 }
             },
