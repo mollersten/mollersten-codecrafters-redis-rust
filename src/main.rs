@@ -13,7 +13,7 @@ fn main() {
      for stream in listener.incoming() {
          match stream {
              Ok(mut stream) => {
-                 stream.write_all(b"+Pong\r\n").expect("Couldn't write Pong");
+                 stream.write_all(b"+PONG\r\n").expect("Couldn't write Pong");
              }
              Err(e) => {
                  println!("error: {}", e);
