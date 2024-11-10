@@ -1,29 +1,20 @@
-use std::{
-    io::{Read, Write}, net::TcpStream, thread
-};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpStream;
 
 
-pub fn pong(mut stream: TcpStream) {
-    loop {
-        let mut buf = [0; 512];
-        let buf_count = stream.read(&mut buf).expect("Error reading...");
+pub async fn pong(mut stream: TcpStream) {
 
-        let mut stream2 = stream.try_clone().unwrap();
+        tokio::spawn(async move {
+            let mut buf = [0; 512];
+            loop {
+                
+                let buf_count = stream.read(&mut buf).await.expect("Error reading...");
+                if buf_count == 0 {
+                    break;
+                }
+                stream.write_all(b"+PONG\r\n").await.expect("Error writing...");
+            }
 
-        if buf_count == 0 {
-            break;
-        }
-
-        stream.write_all(b"+PONG\r\n").expect("Error writing...");
-        
-
-        let join_handle = thread::spawn(move||{
-            stream2.write_all(b"+PONG\r\n").expect("Error writing...");
         });
-        if buf_count > 18 {
-            let _ = join_handle.join();
-        }
 
-
-    }
 }
