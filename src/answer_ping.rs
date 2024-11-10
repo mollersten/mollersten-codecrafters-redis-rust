@@ -4,13 +4,19 @@ use std::{
 };
 
 pub fn pong(mut stream: TcpStream) {
-    //stream.write_all(b"+PONG\r\n").expect("Couldn't write");
-    let mut content: String = String::new();
 
-    stream.read_to_string(&mut content).expect("Couldn't read message");
+    loop {
+        let mut content: String = String::new();
+        let result = stream.read_to_string(&mut content);
 
-    dbg!(&content);
-    if content == "PING" {
-        stream.write_all(b"+PONG\r\n").expect("Couldn't write");
+        match result {
+            Ok(n) => {
+                println!("Got {n} bytes");
+                if content.as_str() == "PING" {
+                    stream.write_all(b"+PONG\r\n").expect("Couldn't write");
+                }
+            },
+            Err(_e) => {},
+        }
     }
 }
