@@ -14,7 +14,8 @@ pub async fn pong(mut stream: TcpStream) {
                 match message[0] {
                     "PING" => stream.write_all(b"+PONG\r\n").await.expect("Error writing..."),
                     "ECHO" if message.len() > 1 => {
-
+                        let message_send = message[1].as_bytes();
+                        stream.write_all(message_send).await.expect("Error writing...");
                     }, 
                     _ => {},
                 };
