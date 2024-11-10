@@ -3,7 +3,7 @@ use std::{
     io::Write,
     net::TcpListener,
 };
-use redis_starter_rust::answer_ping::{self, *};
+use redis_starter_rust::answer_ping::*;
 
 fn main() {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -14,7 +14,7 @@ fn main() {
      for stream in listener.incoming() {
          match stream {
              Ok(stream) => {
-                 answer_ping::pong(stream);
+                 pong(stream);
              }
              Err(e) => {
                  println!("error: {}", e);
