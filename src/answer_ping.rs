@@ -6,7 +6,7 @@ use std::{
 pub fn pong(mut stream: TcpStream) {
     loop {
         let mut buf = [0; 512];
-        let buf_count = stream.read(&mut buf).expect("Couldn't read");
+        let buf_count = stream.read(&mut buf).expect("Error reading...");
 
         let mut stream2 = stream.try_clone().unwrap();
 
@@ -14,12 +14,11 @@ pub fn pong(mut stream: TcpStream) {
             break;
         }
 
+        stream.write_all(b"+PONG\r\n").expect("Error writing...");
         if buf_count > 18 {
             thread::spawn(move||{
                 stream2.write_all(b"+PONG\r\n").expect("Error writing...");
             });
         }
-
-        stream.write_all(b"+PONG\r\n").expect("Error writing...");
     }
 }
