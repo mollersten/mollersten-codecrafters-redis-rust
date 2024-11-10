@@ -14,7 +14,7 @@ pub fn pong(mut stream: TcpStream) {
             break;
         }
 
-        if buf_count > 20 {
+        if buf_count > 18 {
             thread::spawn(move||{
                 stream2.write_all(b"PONG\r\n").expect("Error writing...");
             });
