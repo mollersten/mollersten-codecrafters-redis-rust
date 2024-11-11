@@ -6,6 +6,6 @@ pub async fn handle_ping(stream: &mut TcpStream) {
 }
 
 pub async fn handle_echo(stream: &mut TcpStream, precursor: String, msg: String) {
-    let message: String = format!("{precursor}{msg}\r\n");
+    let message: String = format!("{precursor}\r\n{msg}\r\n");
     stream.write_all(message.as_bytes()).await.unwrap();
 }
