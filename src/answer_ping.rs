@@ -13,7 +13,7 @@ impl HMap {
 
     pub async fn handle_set(&mut self, key: String, value: String, stream: &mut TcpStream) {
         self.hm.insert(key, value);
-        stream.write_all(b"+OK\r\n");
+        stream.write_all(b"+OK\r\n").await.unwrap();
     }
 }
 
