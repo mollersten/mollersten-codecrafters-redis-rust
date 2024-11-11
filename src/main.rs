@@ -2,6 +2,7 @@
 use tokio::net::TcpListener;
 use tokio::io::{AsyncWriteExt, AsyncReadExt};
 use redis_starter_rust::answer_ping::*;
+use redis_starter_rust::parser::*;
 
 #[tokio::main]
 async fn main() {
@@ -13,7 +14,7 @@ async fn main() {
         let stream = listener.accept().await;
         match stream {
             Ok(stream) => {
-                pong(stream.0).await;
+                parse_bytes(stream.0).await;
             }
             Err(e) => {
                 println!("error: {}", e);
