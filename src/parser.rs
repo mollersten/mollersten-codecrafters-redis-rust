@@ -18,7 +18,7 @@ pub async fn parse_bytes(mut stream: TcpStream) {
                 match lines[2] {
                     "PING" => handle_ping(&mut stream).await,
                     "ECHO" if lines.len() > 2 => {
-                        handle_echo(&mut stream, lines[4].to_string()).await;
+                        handle_echo(&mut stream, lines[3].to_string(), lines[4].to_string()).await;
                     },
                     _ => break,
                 };
