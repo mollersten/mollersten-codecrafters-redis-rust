@@ -15,10 +15,10 @@ pub async fn parse_bytes(mut stream: TcpStream) {
             let lines: Vec<&str> = message.lines().collect();
 
             if lines.len() > 1 {
-                match lines[1] {
+                match lines[2] {
                     "PING" => handle_ping(&mut stream).await,
                     "ECHO" if lines.len() > 2 => {
-                        handle_echo(&mut stream, lines[2].to_string()).await;
+                        handle_echo(&mut stream, lines[4].to_string()).await;
                     },
                     _ => break,
                 };
