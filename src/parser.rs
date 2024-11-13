@@ -5,9 +5,8 @@ use std::collections::HashMap;
 
 pub async fn parse_bytes(mut stream: TcpStream) {
     let mut buf = [0; 512];
-    let hm: HashMap<String, String> = HashMap::new();
-    let mut mp = HMap {
-        hm,
+    let mut mp = Storage {
+        storage: HashMap::new(),
     }; 
     tokio::spawn(async move {
         loop {
@@ -28,7 +27,7 @@ pub async fn parse_bytes(mut stream: TcpStream) {
                     "SET" => mp.handle_set(lines[4].to_string(), lines[5].to_string(), lines[6].to_string(), &mut stream).await,
 
                     "GET" => mp.handle_get(lines[4].to_string(), &mut stream).await,
-                    _ => break,
+                    c => panic!("Can't handle command {c}!"),
                 };
             }
     }
