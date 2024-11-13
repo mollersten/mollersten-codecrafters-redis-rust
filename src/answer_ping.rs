@@ -1,7 +1,6 @@
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;
 use std::collections::HashMap;
-use std::str::FromStr;
 
 pub struct HMap {
     pub hm: HashMap<String, String>
@@ -13,8 +12,8 @@ impl HMap {
         stream.write_all(value.unwrap_or(&"$-1\r\n".to_string()).as_bytes()).await.unwrap();
     }
 
-    pub async fn handle_set(&mut self, key: String, value: String, stream: &mut TcpStream) {
-        self.hm.insert(key, format!("{value}\r\n"));
+    pub async fn handle_set(&mut self, key: String, number: String, value: String, stream: &mut TcpStream) {
+        self.hm.insert(key, format!("{number}\r\n{value}\r\n"));
         stream.write_all(b"+OK\r\n").await.unwrap();
     }
 }

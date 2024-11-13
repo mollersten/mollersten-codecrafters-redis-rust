@@ -25,7 +25,8 @@ pub async fn parse_bytes(mut stream: TcpStream) {
                     "ECHO" if lines.len() > 3 => {
                         handle_echo(&mut stream, lines[3].to_string(), lines[4].to_string()).await;
                     },
-                    "SET" => mp.handle_set(lines[4].to_string(), lines[5..=6].concat(), &mut stream).await,
+                    "SET" => mp.handle_set(lines[4].to_string(), lines[5].to_string(), lines[6].to_string(), &mut stream).await,
+
                     "GET" => mp.handle_get(lines[4].to_string(), &mut stream).await,
                     _ => break,
                 };
