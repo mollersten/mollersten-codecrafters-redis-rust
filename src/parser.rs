@@ -1,13 +1,28 @@
 use tokio::net::TcpStream;
 use tokio::io::AsyncReadExt;
 use crate::answer_ping::*;
+use crate::config::*;
 
-pub async fn parse_bytes(mut stream: TcpStream) {
+pub async fn parse_string(val: String) -> String {
+    format!("${}\r\n{}\r\n", val.len(), val)
+}
+
+pub async fn parse_array(vals: Vec<String>) -> String {
+    let length = vals.len();
+    let mut ret_val = format!("*{length}\r\n");
+    for val in &vals {
+        ret_val.push_str(&parse_string(val.to_owned()).await);
+    }
+
+    ret_val
+}
+
+pub async fn parse_bytes(mut stream: TcpStream, dir: String, dbfilename: String) {
     let mut buf = [0; 512];
     let mut mp = Storage::new().await;
+    let mut cg = Config::new().await;
     tokio::spawn(async move {
         loop {
-            
             let read_count = stream.read(&mut buf).await.unwrap();
             if read_count == 0 {
                 break;
@@ -34,7 +49,8 @@ pub async fn parse_bytes(mut stream: TcpStream) {
                             lines[6].to_string(), &mut stream, px).await;
                     },
 
-                    "GET" => mp.handle_get(lines[4].to_string(), &mut stream).await,
+                    "GET" =>  mp.handle_get(lines[4].to_string(), &mut stream).await,
+                    "CONFIG" => cg.handle_config_get(lines[6].to_string(), &mut stream, dir.to_owned(), dbfilename.to_owned()).await, 
                     c => panic!("Can't handle command {c}!"),
                 };
             }
